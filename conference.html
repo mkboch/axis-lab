@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Conference visits by WANG-AXIS Lab members, synchronized from the lab dashboard.">
+  <meta name="theme-color" content="#f1f7fa">
+  <title>Conference Visits — WANG-AXIS Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Serif:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: oklch(0.97 0.015 236);
+      --surface: oklch(1 0 0);
+      --ink: oklch(0.20 0.018 245);
+      --muted: oklch(0.49 0.025 245);
+      --line: oklch(0.84 0.012 240);
+      --line-light: oklch(0.92 0.008 240);
+      --accent: oklch(0.45 0.12 244);
+      --accent-light: oklch(0.94 0.025 236);
+      --teal: oklch(0.50 0.09 182);
+      --ochre: oklch(0.64 0.12 78);
+      --sans: "IBM Plex Sans", sans-serif;
+      --serif: "IBM Plex Serif", serif;
+      --page: min(1240px, calc(100% - 64px));
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.55;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: inherit; }
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 100;
+      padding: 10px 14px;
+      color: var(--surface);
+      background: var(--accent);
+      transform: translateY(-150%);
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .masthead {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: color-mix(in oklch, var(--surface) 96%, transparent);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+    .masthead-inner {
+      width: var(--page);
+      min-height: 76px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 4fr 8fr;
+      align-items: center;
+      gap: 24px;
+    }
+    .wordmark {
+      width: max-content;
+      display: flex;
+      align-items: baseline;
+      gap: 9px;
+      color: var(--ink);
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .wordmark span:first-child {
+      color: var(--accent);
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 500;
+      letter-spacing: -0.05em;
+    }
+    .wordmark span:last-child { font-size: 14px; }
+    .nav-wrap { display: flex; align-items: center; }
+    nav { display: flex; align-items: center; gap: 28px; }
+    nav a {
+      padding: 7px 0 5px;
+      border-bottom: 1px solid transparent;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    nav a:hover, nav a[aria-current="page"] { border-color: currentColor; }
+    nav a[aria-current="page"] { color: var(--accent); }
+    .menu-button {
+      display: none;
+      min-width: 44px;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: var(--surface);
+      font: 500 14px var(--sans);
+      cursor: pointer;
+    }
+
+    .intro {
+      width: var(--page);
+      margin: 0 auto;
+      padding: 88px 0 74px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+      align-items: end;
+    }
+    h1 {
+      grid-column: 1 / span 7;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(54px, 7.5vw, 92px);
+      font-weight: 400;
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+    .intro-copy {
+      grid-column: 9 / -1;
+      margin: 0 0 5px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .sync-note {
+      width: var(--page);
+      margin: 0 auto;
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .visits-section {
+      min-height: 420px;
+      background: var(--surface);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .visits-inner { width: var(--page); margin: 0 auto; padding: 72px 0 104px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: 4fr 8fr;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    .section-label {
+      margin: 8px 0 0;
+      color: var(--ochre);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+    .section-head h2 {
+      max-width: 740px;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+    .loading, .load-error, .empty {
+      padding: 28px 0;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .load-error strong { display: block; margin-bottom: 7px; color: var(--ink); }
+    .load-error a { color: var(--accent); text-underline-offset: 4px; }
+    .visit-list { border-top: 1px solid var(--ink); }
+    .visit {
+      display: grid;
+      grid-template-columns: 2.5fr 5fr 2fr 2.5fr;
+      gap: 24px;
+      padding: 30px 0 32px;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+    .visitor {
+      margin: 0;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .conference-name {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .visit-meta { margin: 3px 0 0; color: var(--muted); }
+    .source-link {
+      display: inline-block;
+      margin-top: 34px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 500;
+      text-underline-offset: 5px;
+    }
+    footer {
+      width: var(--page);
+      margin: 0 auto;
+      padding: 32px 0 44px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 820px) {
+      :root { --page: min(100% - 36px, 720px); }
+      .masthead-inner { min-height: 68px; display: flex; justify-content: space-between; }
+      .wordmark span:last-child { display: none; }
+      .menu-button { display: block; }
+      .nav-wrap {
+        display: none;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        width: 100%;
+        padding: 12px 18px 20px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-wrap.open { display: block; }
+      nav { align-items: stretch; flex-direction: column; gap: 0; }
+      nav a { padding: 12px 0; }
+      .intro { padding: 64px 0 52px; display: block; }
+      h1 { font-size: clamp(50px, 15vw, 72px); }
+      .intro-copy { margin-top: 30px; }
+      .visits-inner { padding: 56px 0 72px; }
+      .section-head { display: block; margin-bottom: 34px; }
+      .section-label { margin: 0 0 12px; }
+      .visit { grid-template-columns: 1fr; gap: 8px; padding: 26px 0; }
+      .conference-name { margin: 2px 0 8px; }
+      .visit-meta { margin: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="wordmark" href="index.html" aria-label="WANG-AXIS Lab resource index home">
+        <span>AXIS</span><span>WANG Lab resource index</span>
+      </a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <div id="site-nav" class="nav-wrap">
+        <nav aria-label="Primary navigation">
+          <a href="index.html#resources" aria-current="page">Resources</a>
+          <a href="index.html#research">Research</a>
+          <a href="people.html?v=color1">People</a>
+          <a href="index.html#about">About</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title">Conference visits</h1>
+      <p class="intro-copy">A live record of conferences attended by WANG-AXIS Lab members.</p>
+    </section>
+
+    <p class="sync-note" id="sync-note">Synchronizing with the lab dashboard…</p>
+
+    <section class="visits-section" aria-labelledby="visits-title">
+      <div class="visits-inner">
+        <div class="section-head">
+          <p class="section-label">Lab travel</p>
+          <h2 id="visits-title">Where our members share their work.</h2>
+        </div>
+        <div id="visits" aria-live="polite">
+          <p class="loading">Loading conference visits…</p>
+        </div>
+        <a class="source-link" href="https://mwnafee.github.io/wanglab_phd_roles/" target="_blank" rel="noopener noreferrer">Open the source dashboard</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>© <span id="year">2026</span> WANG-AXIS Lab</footer>
+
+  <script>
+    const DATA_URL = 'https://silent-queen-b5fe.wasifbd2016.workers.dev/data';
+    const visitsMount = document.getElementById('visits');
+    const syncNote = document.getElementById('sync-note');
+    const menuButton = document.querySelector('.menu-button');
+    const navigation = document.querySelector('.nav-wrap');
+
+    menuButton.addEventListener('click', () => {
+      const isOpen = navigation.classList.toggle('open');
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+      menuButton.textContent = isOpen ? 'Close' : 'Menu';
+    });
+
+    navigation.addEventListener('click', event => {
+      if (event.target.closest('a')) {
+        navigation.classList.remove('open');
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.textContent = 'Menu';
+      }
+    });
+
+    function addTextElement(parent, tag, className, text) {
+      const element = document.createElement(tag);
+      element.className = className;
+      element.textContent = text;
+      parent.appendChild(element);
+    }
+
+    function renderVisits(visits) {
+      visitsMount.replaceChildren();
+      if (!visits.length) {
+        addTextElement(visitsMount, 'p', 'empty', 'No conference visits have been recorded yet.');
+        return;
+      }
+
+      const list = document.createElement('div');
+      list.className = 'visit-list';
+      visits.forEach(visit => {
+        const article = document.createElement('article');
+        article.className = 'visit';
+        addTextElement(article, 'p', 'visitor', visit.nickname || 'Lab member');
+        addTextElement(article, 'h3', 'conference-name', visit.conferenceName || 'Conference');
+        addTextElement(article, 'p', 'visit-meta', visit.dates || 'Dates not listed');
+        addTextElement(article, 'p', 'visit-meta', visit.location || 'Location not listed');
+        list.appendChild(article);
+      });
+      visitsMount.appendChild(list);
+    }
+
+    async function loadVisits() {
+      try {
+        const response = await fetch(DATA_URL, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Dashboard returned ${response.status}`);
+        const data = await response.json();
+        renderVisits(Array.isArray(data.conferenceVisits) ? data.conferenceVisits : []);
+        syncNote.textContent = 'Live data synchronized from the TA/RA and Conference Visits dashboard.';
+      } catch (error) {
+        visitsMount.innerHTML = '<div class="load-error"><strong>Conference visits could not be loaded.</strong><a href="https://mwnafee.github.io/wanglab_phd_roles/" target="_blank" rel="noopener noreferrer">Open the source dashboard</a></div>';
+        syncNote.textContent = 'The live dashboard is temporarily unavailable.';
+      }
+    }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    loadVisits();
+  </script>
+</body>
+</html>
