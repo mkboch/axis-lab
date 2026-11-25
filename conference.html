@@ -325,6 +325,28 @@
       parent.appendChild(element);
     }
 
+    function conferenceDateValue(dateText) {
+      const text = String(dateText || '').trim();
+      const monthNumbers = {
+        jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+        jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
+      };
+      const monthMatch = text.match(/\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\b/i);
+      const years = [...text.matchAll(/\b(?:19|20)\d{2}\b/g)];
+
+      if (monthMatch && years.length) {
+        const month = monthNumbers[monthMatch[0].slice(0, 3).toLowerCase()];
+        const textAfterMonth = text.slice((monthMatch.index || 0) + monthMatch[0].length);
+        const dayMatch = textAfterMonth.match(/\b\d{1,2}\b/);
+        const day = dayMatch ? Number(dayMatch[0]) : 1;
+        const year = Number(years.at(-1)[0]);
+        return Date.UTC(year, month, day);
+      }
+
+      const parsed = Date.parse(text);
+      return Number.isNaN(parsed) ? Number.NEGATIVE_INFINITY : parsed;
+    }
+
     function renderVisits(visits) {
       visitsMount.replaceChildren();
       if (!visits.length) {
@@ -334,7 +356,12 @@
 
       const list = document.createElement('div');
       list.className = 'visit-list';
-      visits.forEach(visit => {
+      const newestFirst = visits
+        .map((visit, index) => ({ visit, index, date: conferenceDateValue(visit.dates) }))
+        .sort((a, b) => b.date - a.date || a.index - b.index)
+        .map(item => item.visit);
+
+      newestFirst.forEach(visit => {
         const article = document.createElement('article');
         article.className = 'visit';
         addTextElement(article, 'p', 'visitor', visit.nickname || 'Lab member');
