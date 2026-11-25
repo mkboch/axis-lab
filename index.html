@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Serif:wght@400;500&amp;display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: oklch(0.985 0.003 240);
+      --bg: oklch(0.97 0.015 236);
       --surface: oklch(1 0 0);
       --ink: oklch(0.20 0.018 245);
       --muted: oklch(0.49 0.025 245);
@@ -19,6 +19,9 @@
       --line-light: oklch(0.92 0.008 240);
       --accent: oklch(0.45 0.12 244);
       --accent-light: oklch(0.94 0.025 236);
+      --teal: oklch(0.50 0.09 182);
+      --teal-light: oklch(0.96 0.025 182);
+      --ochre: oklch(0.64 0.12 78);
       --focus: oklch(0.66 0.16 70);
       --sans: "IBM Plex Sans", sans-serif;
       --serif: "IBM Plex Serif", serif;
@@ -121,8 +124,9 @@
     .hero-copy { grid-column: 1 / span 9; }
     .hero-context {
       margin: 0 0 30px;
-      color: var(--muted);
+      color: var(--teal);
       font-size: 14px;
+      font-weight: 500;
     }
     h1 {
       max-width: 850px;
@@ -154,7 +158,7 @@
       gap: 24px;
       align-items: start;
     }
-    .section-label { margin: 7px 0 0; color: var(--accent); font-size: 14px; font-weight: 600; }
+    .section-label { margin: 7px 0 0; color: var(--teal); font-size: 14px; font-weight: 600; }
     h2 {
       max-width: 780px;
       margin: 0;
@@ -166,6 +170,7 @@
     }
     .resource-list { border-top: 1px solid var(--ink); }
     .resource-row {
+      --row-accent: var(--accent);
       min-height: 152px;
       padding: 28px 0;
       display: grid;
@@ -179,14 +184,16 @@
     .resource-row:hover, .resource-row:focus-visible {
       padding-right: 18px;
       padding-left: 18px;
-      background: var(--accent-light);
+      background: color-mix(in oklch, var(--row-accent) 8%, var(--surface));
     }
-    .resource-number { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .resource-row:nth-child(2), .resource-row:nth-child(4) { --row-accent: var(--teal); }
+    .resource-row:nth-child(3) { --row-accent: var(--ochre); }
+    .resource-number { color: var(--row-accent); font-variant-numeric: tabular-nums; font-weight: 600; }
     .resource-title { font-family: var(--serif); font-size: 25px; line-height: 1.2; }
     .resource-description { max-width: 600px; margin: 2px 0 0; color: var(--muted); }
     .resource-action {
       justify-self: end;
-      color: var(--accent);
+      color: var(--row-accent);
       font-size: 14px;
       font-weight: 600;
       text-decoration: underline;
@@ -219,7 +226,7 @@
       gap: 24px;
       border-bottom: 1px solid var(--line);
     }
-    .topic h3 { margin: 0; font-size: 16px; font-weight: 600; }
+    .topic h3 { margin: 0; color: var(--teal); font-size: 16px; font-weight: 600; }
     .topic p { margin: 0; color: var(--muted); }
 
     .about {
@@ -317,7 +324,7 @@
         <nav aria-label="Primary navigation">
           <a href="#resources">Resources</a>
           <a href="#research">Research</a>
-          <a href="people.html?v=photo2">People</a>
+          <a href="people.html?v=color1">People</a>
           <a href="#about">About</a>
         </nav>
       </div>

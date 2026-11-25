@@ -28,13 +28,15 @@
 
 | Role | Value |
 | --- | --- |
-| Background | `oklch(0.985 0.003 240)` |
+| Background | `oklch(0.97 0.015 236)` |
 | Surface | `oklch(1 0 0)` |
 | Foreground | `oklch(0.20 0.018 245)` |
 | Muted | `oklch(0.49 0.025 245)` |
 | Border | `oklch(0.84 0.012 240)` |
 | Accent | `oklch(0.45 0.12 244)` |
 | Accent surface | `oklch(0.94 0.025 236)` |
+| Companion teal | `oklch(0.50 0.09 182)` |
+| Index ochre | `oklch(0.64 0.12 78)` |
 | Focus | `oklch(0.66 0.16 70)` |
 
 ## Layout and interaction
@@ -58,8 +60,10 @@
 - No repeated equal-weight section templates.
 - Numbering is used only for the resource directory, where sequence and cross-reference are meaningful.
 - Color supports hierarchy but does not create it.
+- Blue remains dominant; teal and ochre appear only in navigation state, section labels, and resource indexing.
 
 ## Changelog
 
 - 2026-11-24: Replaced the generic SaaS-style portal with the clinical editorial index direction.
 - 2026-11-24: Added a synchronized People tab and removed decorative imagery from the landing page.
+- 2026-11-24: Added restrained teal and ochre accents while preserving the editorial hierarchy.
