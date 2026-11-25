@@ -1,480 +1,170 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WANG-AXIS AI Lab Manager</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="WANG-AXIS Lab resource hub for research datasets, GPU availability, student roles, software, and lab information.">
+  <meta name="theme-color" content="#071a2d">
+  <title>WANG-AXIS Lab | Research Resource Hub</title>
   <style>
     :root {
-      --bg: #f6f8fc;
-      --panel: #ffffff;
-      --line: #e5e7eb;
-      --text: #0f172a;
-      --muted: #64748b;
-      --blue: #3557e6;
-      --soft: #eef4ff;
+      --navy:#071a2d; --navy-2:#103a57; --blue:#1777d1; --cyan:#37d1d0;
+      --paper:#f4f9fd; --white:#fff; --ink:#102234; --muted:#5e7182; --line:#dce7ef;
+      --shadow:0 22px 55px rgba(8,34,56,.12); --page:min(1180px,calc(100% - 40px));
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background: linear-gradient(110deg, #f8fbff, #f4f0ff 55%, #eefcfb);
-      height: 100vh;
-      overflow: hidden;
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:90px}
+    body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:inherit} button,a{-webkit-tap-highlight-color:transparent}
+    .skip{position:fixed;top:10px;left:10px;z-index:100;padding:10px 14px;color:#fff;background:var(--blue);border-radius:8px;transform:translateY(-160%);transition:.16s}
+    .skip:focus{transform:translateY(0)}
+
+    header{position:sticky;top:0;z-index:50;background:rgba(7,26,45,.95);border-bottom:1px solid rgba(255,255,255,.1);backdrop-filter:blur(16px)}
+    .header-inner{width:var(--page);min-height:74px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:30px}
+    .brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;font-weight:850;letter-spacing:.02em;line-height:1.1}
+    .brand-mark{width:42px;height:42px;display:grid;place-items:center;color:var(--navy);background:linear-gradient(135deg,var(--cyan),#8af1df);border-radius:13px;font-size:18px;font-weight:900;box-shadow:0 8px 25px rgba(55,209,208,.22)}
+    .brand small{display:block;margin-top:4px;color:#9fc2d8;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+    nav{display:flex;align-items:center;gap:26px}
+    nav a{color:#d7e6ef;font-size:14px;font-weight:750;text-decoration:none} nav a:hover{color:#fff}
+    nav .nav-cta{padding:10px 15px;color:var(--navy);background:var(--cyan);border-radius:10px}
+    .menu{display:none;width:44px;height:44px;border:1px solid rgba(255,255,255,.18);color:#fff;background:transparent;border-radius:10px;font-size:22px;cursor:pointer}
+
+    .hero{position:relative;overflow:hidden;color:#fff;background:radial-gradient(circle at 82% 20%,rgba(55,209,208,.2),transparent 27%),radial-gradient(circle at 8% 80%,rgba(42,145,232,.2),transparent 33%),linear-gradient(135deg,var(--navy),var(--navy-2))}
+    .hero:after{content:"";position:absolute;inset:0;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.16) 1px,transparent 1px);background-size:52px 52px;mask-image:linear-gradient(to left,#000,transparent 75%);pointer-events:none}
+    .hero-inner{position:relative;z-index:1;width:var(--page);min-height:590px;margin:auto;padding:90px 0 84px;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:70px}
+    .eyebrow,.kicker{color:#8de9e4;font-size:13px;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+    .eyebrow{display:flex;align-items:center;gap:9px;margin-bottom:22px}.eyebrow:before{content:"";width:28px;height:2px;background:var(--cyan)}
+    h1{max-width:780px;margin:0;font-size:clamp(44px,6vw,76px);line-height:1.02;letter-spacing:-.045em}
+    .hero-copy>p{max-width:650px;margin:26px 0 0;color:#c3d9e7;font-size:clamp(17px,2vw,20px)}
+    .actions{margin-top:36px;display:flex;flex-wrap:wrap;gap:12px}
+    .button{min-height:50px;padding:0 20px;display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid transparent;border-radius:12px;font-weight:800;text-decoration:none;transition:.16s}
+    .button:hover{transform:translateY(-2px)}.button.primary{color:var(--navy);background:var(--cyan);box-shadow:0 12px 28px rgba(55,209,208,.2)}.button.secondary{color:#fff;border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.06)}
+    .quick-panel{padding:28px;border:1px solid rgba(255,255,255,.14);border-radius:28px;background:rgba(255,255,255,.075);box-shadow:0 25px 70px rgba(0,0,0,.2);backdrop-filter:blur(14px)}
+    .panel-label{margin:0 0 16px;color:#9fc2d8;font-size:12px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}
+    .quick{padding:15px 0;display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:13px;color:#fff;border-top:1px solid rgba(255,255,255,.11);text-decoration:none}.quick:first-of-type{border:0}
+    .quick-icon{width:44px;height:44px;display:grid;place-items:center;color:var(--cyan);background:rgba(55,209,208,.11);border-radius:12px;font-size:20px}
+    .quick strong{display:block;font-size:14px}.quick small{display:block;color:#9fc2d8;font-size:12px}.quick b{color:var(--cyan);transition:.16s}.quick:hover b{transform:translateX(4px)}
+
+    section{padding:94px 0}.container{width:var(--page);margin:auto}.heading{max-width:760px;margin-bottom:42px}
+    .kicker{margin:0 0 10px;color:var(--blue)}h2{margin:0;font-size:clamp(32px,4.2vw,50px);line-height:1.1;letter-spacing:-.035em}.heading>p:last-child{margin:17px 0 0;color:var(--muted);font-size:17px}
+    .resource-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+    .resource{min-height:285px;padding:26px;display:flex;flex-direction:column;grid-column:span 2;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 8px 30px rgba(8,34,56,.055);text-decoration:none;transition:.18s}
+    .resource:nth-child(1),.resource:nth-child(2){grid-column:span 3}.resource:hover{transform:translateY(-5px);border-color:#a7d7ee;box-shadow:var(--shadow)}
+    .card-icon{width:50px;height:50px;margin-bottom:28px;display:grid;place-items:center;color:var(--blue);background:#e9f5fd;border-radius:14px;font-size:21px;font-weight:850}
+    .resource h3{margin:0 0 9px;font-size:21px;line-height:1.2}.resource p{margin:0 0 22px;color:var(--muted);font-size:14px}.card-link{margin-top:auto;color:var(--blue);font-size:14px;font-weight:850}
+
+    .research{color:#fff;background:#0a2034}.research .kicker{color:var(--cyan)}.research .heading>p:last-child{color:#aac3d3}
+    .research-layout{display:grid;grid-template-columns:.82fr 1.18fr;gap:70px;align-items:start}.themes{display:grid;gap:12px}
+    .theme{padding:22px 24px;display:grid;grid-template-columns:36px 1fr;gap:14px;border:1px solid rgba(255,255,255,.11);border-radius:16px;background:rgba(255,255,255,.045)}
+    .theme>span{color:var(--cyan);font-weight:900}.theme h3{margin:0 0 5px;font-size:17px}.theme p{margin:0;color:#a9c0cf;font-size:14px}
+
+    .operations{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.operation{padding:25px;border:1px solid var(--line);border-radius:18px;background:#fff}
+    .operation .label{color:var(--blue);font-size:12px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.operation h3{margin:10px 0 8px;font-size:20px}.operation p{margin:0 0 20px;color:var(--muted);font-size:14px}.operation a{color:var(--blue);font-weight:850;text-decoration:none}
+
+    .about{padding-top:0}.about-box{padding:56px;display:grid;grid-template-columns:1.35fr .65fr;gap:60px;align-items:center;color:#fff;background:linear-gradient(125deg,#126aaf,#0d958f);border-radius:28px;box-shadow:var(--shadow)}
+    .about-box h2{font-size:clamp(30px,4vw,44px)}.about-box p{margin:17px 0 0;color:#e0f6f4}.about-box .button{color:var(--navy);background:#fff}.about-action{display:flex;justify-content:flex-end}
+
+    footer{color:#b8cfdd;background:var(--navy)}.footer-main{width:var(--page);padding:54px 0 38px;margin:auto;display:grid;grid-template-columns:1.5fr repeat(2,1fr);gap:50px}
+    footer h3,footer h4{margin:0 0 14px;color:#fff}.footer-main p{max-width:430px;margin:0;font-size:14px}.footer-links{display:grid;gap:9px}.footer-links a{color:#b8cfdd;font-size:14px;text-decoration:none}.footer-links a:hover{color:#fff}
+    .footer-bottom{width:var(--page);margin:auto;padding:20px 0 26px;display:flex;justify-content:space-between;gap:20px;border-top:1px solid rgba(255,255,255,.1);font-size:12px}
+    :focus-visible{outline:3px solid #ffd166;outline-offset:3px}
+
+    @media(max-width:900px){
+      .menu{display:grid;place-items:center}nav{position:absolute;top:74px;left:0;right:0;padding:20px;display:none;flex-direction:column;align-items:stretch;gap:8px;background:var(--navy);border-top:1px solid rgba(255,255,255,.1)}nav.open{display:flex}nav a{padding:10px}nav .nav-cta{text-align:center}
+      .hero-inner,.research-layout{grid-template-columns:1fr}.hero-inner{gap:45px;padding-top:70px}.research-layout{gap:35px}.resource,.resource:nth-child(1),.resource:nth-child(2){grid-column:span 3}.operations{grid-template-columns:1fr}.about-box{grid-template-columns:1fr;gap:30px}.about-action{justify-content:flex-start}
     }
-    header {
-      height: 86px;
-      padding: 18px 28px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,0.86);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    @media(max-width:620px){
+      :root{--page:min(calc(100% - 28px),1180px)}.brand small{display:none}.hero-inner{min-height:auto;padding:58px 0 70px}h1{font-size:42px}section{padding:70px 0}.resource-grid{grid-template-columns:1fr}.resource,.resource:nth-child(1),.resource:nth-child(2){grid-column:auto;min-height:250px}.about-box{padding:34px 26px}.footer-main{grid-template-columns:1fr;gap:32px}.footer-bottom{flex-direction:column}
     }
-    header h1 {
-      margin: 0;
-      font-size: 24px;
-      line-height: 1.1;
-    }
-    header p {
-      margin: 8px 0 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .status {
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 13px;
-      background: #e8fff0;
-      color: #166534;
-      border: 1px solid #bbf7d0;
-    }
-    .status.offline {
-      background: #fff1f2;
-      color: #991b1b;
-      border-color: #fecdd3;
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: 280px 1fr 330px;
-      height: calc(100vh - 86px);
-    }
-    aside.left, aside.right {
-      background: rgba(255,255,255,0.72);
-      border-right: 1px solid var(--line);
-      padding: 18px 16px;
-      overflow-y: auto;
-    }
-    aside.right {
-      border-right: 0;
-      border-left: 1px solid var(--line);
-      padding: 18px;
-    }
-    .section-title {
-      font-size: 12px;
-      font-weight: 900;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin: 12px 0 9px;
-    }
-    .nav-btn {
-      width: 100%;
-      display: block;
-      border: 1px solid var(--line);
-      background: #fff;
-      border-radius: 13px;
-      padding: 12px 13px;
-      margin: 8px 0;
-      text-align: left;
-      font-weight: 700;
-      cursor: pointer;
-      color: var(--text);
-    }
-    .nav-btn:hover {
-      border-color: #b7c4ff;
-      background: var(--soft);
-    }
-    main {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-    #chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 22px 26px;
-    }
-    .msg {
-      max-width: 850px;
-      margin: 0 0 18px 0;
-      white-space: pre-wrap;
-      line-height: 1.45;
-      font-size: 14px;
-    }
-    .msg.user {
-      margin-left: auto;
-      background: var(--blue);
-      color: white;
-      border-radius: 18px 18px 4px 18px;
-      padding: 12px 16px;
-      max-width: 620px;
-    }
-    .msg.assistant {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 18px 18px 18px 4px;
-      padding: 14px 16px;
-      box-shadow: 0 10px 28px rgba(15,23,42,0.05);
-    }
-    .msg.assistant a, .card a {
-      color: #1d4ed8;
-      font-weight: 800;
-      text-decoration: underline;
-    }
-    .source-row {
-      border-top: 1px solid var(--line);
-      margin-top: 12px;
-      padding-top: 10px;
-      font-size: 13px;
-    }
-    .source-row a {
-      margin-right: 12px;
-    }
-    .composer {
-      display: flex;
-      gap: 10px;
-      padding: 14px 26px 18px;
-      border-top: 1px solid var(--line);
-      background: rgba(255,255,255,0.7);
-    }
-    #q {
-      flex: 1;
-      border: 1px solid #cbd5e1;
-      border-radius: 14px;
-      padding: 13px 14px;
-      font-size: 14px;
-      outline: none;
-      background: white;
-    }
-    #ask, #copy {
-      border: 0;
-      border-radius: 14px;
-      padding: 0 18px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    #ask {
-      background: var(--blue);
-      color: white;
-    }
-    #copy {
-      border: 1px solid #cbd5e1;
-      background: white;
-      color: #334155;
-    }
-    .card {
-      background: rgba(255,255,255,0.9);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 12px 28px rgba(15,23,42,0.04);
-    }
-    .card h3 {
-      margin: 0 0 10px 0;
-      font-size: 15px;
-    }
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-    .ref a {
-      display: block;
-      margin: 12px 0;
-      font-size: 14px;
-    }
-    @media (max-width: 1050px) {
-      .layout { grid-template-columns: 230px 1fr; }
-      aside.right { display: none; }
-    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
   </style>
-
-<style id="scroll-fix-v1">
-  html, body {
-    height: 100% !important;
-    min-height: 100% !important;
-  }
-
-  body {
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: hidden !important;
-  }
-
-  header {
-    flex: 0 0 auto !important;
-  }
-
-  .layout {
-    flex: 1 1 auto !important;
-    height: auto !important;
-    min-height: 0 !important;
-    overflow: hidden !important;
-  }
-
-  aside.left,
-  aside.right {
-    height: 100% !important;
-    min-height: 0 !important;
-    overflow-y: auto !important;
-  }
-
-  main {
-    height: 100% !important;
-    min-height: 0 !important;
-    overflow: hidden !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  #chat {
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    scroll-behavior: smooth !important;
-    padding-bottom: 24px !important;
-  }
-
-  .composer {
-    flex: 0 0 auto !important;
-    position: sticky !important;
-    bottom: 0 !important;
-    z-index: 5 !important;
-  }
-
-  .msg {
-    overflow-wrap: anywhere !important;
-    word-break: normal !important;
-  }
-</style>
-
 </head>
-
 <body>
+  <a class="skip" href="#main">Skip to main content</a>
   <header>
-    <div>
-      <h1>WANG-AXIS AI Lab Manager</h1>
-      <p>Ask about lab inventory, datasets, GPUs, GitHub repositories, and TA/RA roles. The assistant uses live lab data for factual questions and keeps memory within the current chat.</p>
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="WANG-AXIS Lab home"><span class="brand-mark" aria-hidden="true">W</span><span>WANG-AXIS Lab<small>Research resource hub</small></span></a>
+      <button class="menu" type="button" aria-expanded="false" aria-controls="navigation" aria-label="Open navigation">☰</button>
+      <nav id="navigation" aria-label="Primary navigation">
+        <a href="#resources">Resources</a><a href="#research">Research</a><a href="#operations">Lab tools</a><a href="#about">About</a>
+        <a class="nav-cta" href="https://wang-axis.github.io/" target="_blank" rel="noopener noreferrer">Official lab site ↗</a>
+      </nav>
     </div>
-    <div id="status" class="status">Checking backend...</div>
   </header>
 
-  <div class="layout">
-    <aside class="left">
-      <div class="section-title">Resources</div>
-      <button class="nav-btn" data-q="Give me a brief overview of the lab resources.">Lab overview</button>
-      <button class="nav-btn" data-q="inventory details">Inventory details</button>
-      <button class="nav-btn" data-q="Summarize the lab GitHub repositories.">GitHub repositories</button>
-
-      <div class="section-title">GPU Manager</div>
-      <button class="nav-btn" data-q="GPU overview">GPU overview</button>
-
-      <div class="section-title">Datasets</div>
-      <button class="nav-btn" data-q="List all lab datasets with names and sizes.">Dataset list</button>
-      <button class="nav-btn" data-q="In the datasets, is there any medical imaging related dataset?">Medical imaging datasets</button>
-      <button class="nav-btn" data-q="Which datasets are most suitable for chest CT vision-language modeling?">Dataset suitability</button>
-
-      <div class="section-title">People and Roles</div>
-      <button class="nav-btn" data-q="tell me about TA/RA roles">TA/RA roles</button>
-    </aside>
-
-    <main>
-      <div id="chat"></div>
-      <div class="composer">
-        <input id="q" placeholder="Ask the AI Lab Manager..." />
-        <button id="ask">Ask</button>
-        <button id="copy">Copy</button>
+  <main id="main">
+    <section id="top" class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="eyebrow">WANG-AXIS Research Lab</div>
+          <h1>One place for the lab's research resources.</h1>
+          <p>Find datasets, check shared computing resources, review student roles, and explore open-source projects through a fast, static portal.</p>
+          <div class="actions"><a class="button primary" href="#resources">Explore resources ↓</a><a class="button secondary" href="https://github.com/WANG-AXIS" target="_blank" rel="noopener noreferrer">View our code ↗</a></div>
+        </div>
+        <aside class="quick-panel" aria-label="Quick access links">
+          <p class="panel-label">Quick access</p>
+          <a class="quick" href="https://wang-axis.github.io/datasets/" target="_blank" rel="noopener noreferrer"><span class="quick-icon" aria-hidden="true">◫</span><span><strong>Research datasets</strong><small>Browse imaging and multimodal data</small></span><b aria-hidden="true">→</b></a>
+          <a class="quick" href="https://mwnafee.github.io/lab-gpu-dashboard/" target="_blank" rel="noopener noreferrer"><span class="quick-icon" aria-hidden="true">⌁</span><span><strong>GPU dashboard</strong><small>View shared compute availability</small></span><b aria-hidden="true">→</b></a>
+          <a class="quick" href="https://mwnafee.github.io/wanglab_phd_roles/" target="_blank" rel="noopener noreferrer"><span class="quick-icon" aria-hidden="true">◎</span><span><strong>TA/RA roles</strong><small>Review student assignments</small></span><b aria-hidden="true">→</b></a>
+        </aside>
       </div>
-    </main>
+    </section>
 
-    <aside class="right">
-      <div class="card">
-        <h3>Answer mode</h3>
-        <p>Factual questions use exact database answers. Follow-up questions use recent chat memory.</p>
+    <section id="resources" aria-labelledby="resources-title">
+      <div class="container">
+        <div class="heading"><p class="kicker">Resource directory</p><h2 id="resources-title">Everything you need, without the searching.</h2><p>Use these maintained pages as the source of truth for lab research, infrastructure, and organization.</p></div>
+        <div class="resource-grid">
+          <a class="resource" href="https://wang-axis.github.io/datasets/" target="_blank" rel="noopener noreferrer"><span class="card-icon" aria-hidden="true">◫</span><h3>Lab datasets</h3><p>Explore available medical imaging, CT, radiology, and vision-language datasets, with descriptions, sizes, access details, and storage locations.</p><span class="card-link">Open dataset library →</span></a>
+          <a class="resource" href="https://mwnafee.github.io/lab-gpu-dashboard/" target="_blank" rel="noopener noreferrer"><span class="card-icon" aria-hidden="true">⌁</span><h3>GPU dashboard</h3><p>See GPU utilization and availability across shared lab servers before choosing a machine for training, inference, or experiments.</p><span class="card-link">Check GPU availability →</span></a>
+          <a class="resource" href="https://github.com/WANG-AXIS" target="_blank" rel="noopener noreferrer"><span class="card-icon" aria-hidden="true">⌘</span><h3>GitHub organization</h3><p>Browse the lab's public software, research implementations, websites, and open-source projects.</p><span class="card-link">Browse repositories →</span></a>
+          <a class="resource" href="https://mwnafee.github.io/wanglab_phd_roles/" target="_blank" rel="noopener noreferrer"><span class="card-icon" aria-hidden="true">◎</span><h3>TA/RA roles</h3><p>View term-by-term teaching and research assistant assignments for participating lab students.</p><span class="card-link">View role dashboard →</span></a>
+          <a class="resource" href="https://wang-axis.github.io/" target="_blank" rel="noopener noreferrer"><span class="card-icon" aria-hidden="true">AX</span><h3>Official lab website</h3><p>Learn more about the lab, its research, people, publications, news, and broader academic work.</p><span class="card-link">Visit WANG-AXIS →</span></a>
+        </div>
       </div>
+    </section>
 
-      <div class="card">
-        <h3>Last reference</h3>
-        <p id="lastRef">No answer yet.</p>
+    <section id="research" class="research" aria-labelledby="research-title">
+      <div class="container research-layout">
+        <div class="heading"><p class="kicker">Research focus</p><h2 id="research-title">Computational imaging meets intelligent systems.</h2><p>The shared resource ecosystem supports work across medical imaging, computed tomography, data-driven analysis, and translational AI.</p><div class="actions"><a class="button primary" href="https://wang-axis.github.io/" target="_blank" rel="noopener noreferrer">Discover the lab ↗</a></div></div>
+        <div class="themes">
+          <article class="theme"><span>01</span><div><h3>Medical imaging</h3><p>Data, methods, and systems for advanced biomedical image analysis.</p></div></article>
+          <article class="theme"><span>02</span><div><h3>Computed tomography</h3><p>Research resources spanning CT acquisition, reconstruction, and image understanding.</p></div></article>
+          <article class="theme"><span>03</span><div><h3>Multimodal AI</h3><p>Imaging and language resources for grounded and clinically relevant AI research.</p></div></article>
+          <article class="theme"><span>04</span><div><h3>Open research software</h3><p>Public repositories that share implementations and support reproducible research.</p></div></article>
+        </div>
       </div>
+    </section>
 
-      <div class="card ref">
-        <h3>Reference pages</h3>
-        <a href="https://wang-axis.github.io/" target="_blank" rel="noopener noreferrer">WANG-AXIS Lab Website</a>
-        <a href="https://wang-axis.github.io/datasets/" target="_blank" rel="noopener noreferrer">Lab Datasets Page</a>
-        <a href="https://mwnafee.github.io/lab-gpu-dashboard/" target="_blank" rel="noopener noreferrer">GPU Dashboard</a>
-        <a href="https://mwnafee.github.io/wanglab_phd_roles/" target="_blank" rel="noopener noreferrer">TA/RA Roles Dashboard</a>
-        <a href="https://github.com/WANG-AXIS" target="_blank" rel="noopener noreferrer">WANG-AXIS GitHub</a>
-        <a href="https://mkboch.github.io/Lab_Chatbot/" target="_blank" rel="noopener noreferrer">Lab Chatbot GitHub Page</a>
+    <section id="operations" aria-labelledby="operations-title">
+      <div class="container">
+        <div class="heading"><p class="kicker">For lab members</p><h2 id="operations-title">Start with the right resource.</h2><p>Three common workflows link directly to their maintained dashboard or repository.</p></div>
+        <div class="operations">
+          <article class="operation"><span class="label">Before a compute job</span><h3>Choose an available GPU</h3><p>Check current utilization before launching a long-running experiment on shared infrastructure.</p><a href="https://mwnafee.github.io/lab-gpu-dashboard/" target="_blank" rel="noopener noreferrer">Open GPU dashboard →</a></article>
+          <article class="operation"><span class="label">Before a new study</span><h3>Review available data</h3><p>Compare dataset scope, modality, access, size, and location before starting development.</p><a href="https://wang-axis.github.io/datasets/" target="_blank" rel="noopener noreferrer">Open dataset library →</a></article>
+          <article class="operation"><span class="label">Before implementation</span><h3>Find existing code</h3><p>Look for related lab projects and reusable research implementations in the organization.</p><a href="https://github.com/WANG-AXIS" target="_blank" rel="noopener noreferrer">Search GitHub →</a></article>
+        </div>
       </div>
-    </aside>
-  </div>
+    </section>
 
-<script>
-const API_BASE = "https://suzuki-constitutes-headquarters-universities.trycloudflare.com";
-const TOKEN = "wangaxis-demo";
+    <section id="about" class="about" aria-labelledby="about-title">
+      <div class="container"><div class="about-box"><div><p class="kicker" style="color:#c4fffa">About this portal</p><h2 id="about-title">A lightweight front door to WANG-AXIS resources.</h2><p>This site is intentionally static. It does not run a chatbot or AI model, and it makes no background requests to a chatbot server. Each card takes you directly to the maintained source page.</p></div><div class="about-action"><a class="button" href="https://wang-axis.github.io/" target="_blank" rel="noopener noreferrer">Visit official website ↗</a></div></div></div>
+    </section>
+  </main>
 
-const chat = document.getElementById("chat");
-const qInput = document.getElementById("q");
-const statusEl = document.getElementById("status");
-const lastRef = document.getElementById("lastRef");
+  <footer>
+    <div class="footer-main">
+      <div><h3>WANG-AXIS Lab</h3><p>A central directory for research data, shared computing, student roles, public code, and official lab information.</p></div>
+      <div><h4>Resources</h4><div class="footer-links"><a href="https://wang-axis.github.io/datasets/" target="_blank" rel="noopener noreferrer">Datasets</a><a href="https://mwnafee.github.io/lab-gpu-dashboard/" target="_blank" rel="noopener noreferrer">GPU dashboard</a><a href="https://mwnafee.github.io/wanglab_phd_roles/" target="_blank" rel="noopener noreferrer">TA/RA roles</a></div></div>
+      <div><h4>Lab</h4><div class="footer-links"><a href="https://wang-axis.github.io/" target="_blank" rel="noopener noreferrer">Official website</a><a href="https://github.com/WANG-AXIS" target="_blank" rel="noopener noreferrer">GitHub organization</a></div></div>
+    </div>
+    <div class="footer-bottom"><span>© <span id="year">2026</span> WANG-AXIS Lab</span><span>Static resource portal · No chatbot services</span></div>
+  </footer>
 
-let lastAssistantText = "";
-
-const refs = {
-  gpu: [["GPU Dashboard", "https://mwnafee.github.io/lab-gpu-dashboard/"]],
-  roles: [["TA/RA Roles Dashboard", "https://mwnafee.github.io/wanglab_phd_roles/"]],
-  datasets: [["Lab Datasets Page", "https://wang-axis.github.io/datasets/"]],
-  github: [["WANG-AXIS GitHub", "https://github.com/WANG-AXIS"]],
-  inventory: [["WANG-AXIS Lab Website", "https://wang-axis.github.io/"]],
-  overview: [["WANG-AXIS Lab Website", "https://wang-axis.github.io/"]]
-};
-
-function escapeHtml(s) {
-  return String(s || "").replace(/[&<>"']/g, m => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-  }[m]));
-}
-
-function linkify(s) {
-  let safe = escapeHtml(s);
-  safe = safe.replace(/(https?:\/\/[^\s<]+)/g, url => {
-    const clean = url.replace(/[).,;]+$/, "");
-    const trail = url.slice(clean.length);
-    return '<a href="' + clean + '" target="_blank" rel="noopener noreferrer">' + clean + '</a>' + trail;
-  });
-  return safe;
-}
-
-function inferTopic(answer, apiTopic) {
-  const t = (apiTopic || "").toLowerCase();
-  const a = (answer || "").toLowerCase();
-
-  if (["gpu", "roles", "datasets", "github", "inventory", "overview"].includes(t)) return t;
-  if (a.includes("gpu dashboard") || a.includes("h100") || a.includes("vram")) return "gpu";
-  if (a.includes("ta/ra") || a.includes("ra term") || a.includes("ta term") || a.includes("role summary")) return "roles";
-  if (a.includes("dataset") || a.includes("ct-rate") || a.includes("radgenome") || a.includes("merlin")) return "datasets";
-  if (a.includes("github") || a.includes("repository")) return "github";
-  if (a.includes("inventory") || a.includes("equipment") || a.includes("asset")) return "inventory";
-  return "overview";
-}
-
-function addMessage(role, text, topic) {
-  const div = document.createElement("div");
-  div.className = "msg " + role;
-
-  if (role === "assistant") {
-    let html = linkify(text);
-
-    const topicKey = inferTopic(text, topic);
-    const sourceLinks = refs[topicKey] || [];
-    if (sourceLinks.length) {
-      html += '<div class="source-row"><strong>Source links:</strong> ';
-      html += sourceLinks.map(([label, url]) =>
-        '<a href="' + url + '" target="_blank" rel="noopener noreferrer">' + label + '</a>'
-      ).join(" ");
-      html += "</div>";
-      lastRef.innerHTML = sourceLinks.map(([label, url]) =>
-        '<a href="' + url + '" target="_blank" rel="noopener noreferrer">' + label + '</a>'
-      ).join("<br>");
-    }
-
-    div.innerHTML = html;
-    lastAssistantText = text;
-  } else {
-    div.textContent = text;
-  }
-
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
-
-async function ask(text) {
-  const query = (text || qInput.value || "").trim();
-  if (!query) return;
-
-  addMessage("user", query);
-  qInput.value = "";
-
-  const loading = document.createElement("div");
-  loading.className = "msg assistant";
-  loading.textContent = "Thinking...";
-  chat.appendChild(loading);
-  chat.scrollTop = chat.scrollHeight;
-
-  try {
-    const url = API_BASE + "/chat?token=" + encodeURIComponent(TOKEN) + "&q=" + encodeURIComponent(query);
-    const res = await fetch(url, { cache: "no-store" });
-    const data = await res.json();
-
-    loading.remove();
-
-    if (!data.ok) {
-      addMessage("assistant", data.error || "Backend returned an error.", "overview");
-      return;
-    }
-
-    addMessage("assistant", data.answer || "", data.topic || "");
-  } catch (e) {
-    loading.remove();
-    addMessage("assistant", "Could not reach the backend server. Please check whether the Cloudflare tunnel is still running.", "overview");
-  }
-}
-
-async function checkHealth() {
-  try {
-    const res = await fetch(API_BASE + "/health", { cache: "no-store" });
-    const data = await res.json();
-    if (data.ok) {
-      statusEl.textContent = "Backend online";
-      statusEl.classList.remove("offline");
-    } else {
-      statusEl.textContent = "Backend error";
-      statusEl.classList.add("offline");
-    }
-  } catch (e) {
-    statusEl.textContent = "Backend offline";
-    statusEl.classList.add("offline");
-  }
-}
-
-document.getElementById("ask").onclick = () => ask();
-qInput.addEventListener("keydown", e => {
-  if (e.key === "Enter") ask();
-});
-
-document.querySelectorAll(".nav-btn").forEach(btn => {
-  btn.addEventListener("click", () => ask(btn.dataset.q));
-});
-
-document.getElementById("copy").onclick = async () => {
-  if (!lastAssistantText) return;
-  await navigator.clipboard.writeText(lastAssistantText);
-};
-
-addMessage("assistant", "Hello. I am the WANG-AXIS AI Lab Manager. Ask me about lab inventory, datasets, GPUs, GitHub repositories, or TA/RA roles.", "overview");
-checkHealth();
-setInterval(checkHealth, 30000);
-</script>
+  <script>
+    const button=document.querySelector('.menu'),nav=document.querySelector('nav');
+    button.addEventListener('click',()=>{const open=nav.classList.toggle('open');button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Close navigation':'Open navigation');button.textContent=open?'×':'☰'});
+    nav.addEventListener('click',e=>{if(e.target.closest('a')){nav.classList.remove('open');button.setAttribute('aria-expanded','false');button.setAttribute('aria-label','Open navigation');button.textContent='☰'}});
+    document.getElementById('year').textContent=new Date().getFullYear();
+  </script>
 </body>
 </html>
-
-<!-- scroll-fix-v1: 2026-05-25T13:28:10.122545+00:00 -->
-
-<!-- gpu-direct-dashboard-v1: 2026-05-25T14:26:55.876154+00:00 -->
