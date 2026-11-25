@@ -46,6 +46,7 @@
 - Focus is visible, targets are at least 44px tall, and reduced-motion preferences are respected.
 - Mobile collapses to one reading column without changing the information order.
 - The People page fetches and sanitizes the official upstream members page at runtime, then presents it with the local design system.
+- Member photographs retain their upstream color and complete original aspect ratio; the local layout never crops them.
 
 ## Slop audit
 
