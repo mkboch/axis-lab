@@ -5,14 +5,14 @@
 - Artifact: static academic resource index.
 - Primary audience: WANG-AXIS lab members looking for datasets, compute, roles, or code.
 - Secondary audience: collaborators and visitors learning what the lab does.
-- Primary outcome: reach the correct maintained resource with minimal scanning and no chatbot dependency.
+- Primary outcome: reach the correct maintained resource or current member profile with minimal scanning.
 - Positioning: academic and technical, not a software product or marketing campaign.
 
 ## Direction
 
 - Brand adjectives: precise, credible, restrained, technical, human.
 - Aesthetic essence: clinical editorial index.
-- Signature move: a real lab CT image alongside a numbered, full-width resource directory.
+- Signature move: a numbered, full-width resource directory paired with a live, restyled upstream roster.
 - Restraint: no gradients, glass effects, soft shadows, decorative icon tiles, card grids, or autonomous animation.
 
 ## Tokens
@@ -45,6 +45,7 @@
 - The only scripted interaction is the mobile navigation toggle.
 - Focus is visible, targets are at least 44px tall, and reduced-motion preferences are respected.
 - Mobile collapses to one reading column without changing the information order.
+- The People page fetches and sanitizes the official upstream members page at runtime, then presents it with the local design system.
 
 ## Slop audit
 
@@ -60,3 +61,4 @@
 ## Changelog
 
 - 2026-11-24: Replaced the generic SaaS-style portal with the clinical editorial index direction.
+- 2026-11-24: Added a synchronized People tab and removed decorative imagery from the landing page.

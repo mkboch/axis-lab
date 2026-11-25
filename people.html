@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Current WANG-AXIS Lab members, synchronized from the official lab roster.">
+  <meta name="theme-color" content="#ffffff">
+  <title>People — WANG-AXIS Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Serif:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: oklch(0.985 0.003 240);
+      --surface: oklch(1 0 0);
+      --ink: oklch(0.20 0.018 245);
+      --muted: oklch(0.49 0.025 245);
+      --line: oklch(0.84 0.012 240);
+      --line-light: oklch(0.92 0.008 240);
+      --accent: oklch(0.45 0.12 244);
+      --accent-light: oklch(0.94 0.025 236);
+      --focus: oklch(0.66 0.16 70);
+      --sans: "IBM Plex Sans", sans-serif;
+      --serif: "IBM Plex Serif", serif;
+      --page: min(1240px, calc(100% - 64px));
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.55;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 100;
+      padding: 10px 14px;
+      color: var(--surface);
+      background: var(--accent);
+      transform: translateY(-150%);
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .masthead {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: color-mix(in oklch, var(--surface) 96%, transparent);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+    .masthead-inner {
+      width: var(--page);
+      min-height: 76px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 4fr 8fr;
+      align-items: center;
+      gap: 24px;
+    }
+    .wordmark {
+      width: max-content;
+      display: flex;
+      align-items: baseline;
+      gap: 9px;
+      color: var(--ink);
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .wordmark span:first-child {
+      color: var(--accent);
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 500;
+      letter-spacing: -0.05em;
+    }
+    .wordmark span:last-child { font-size: 14px; }
+    .nav-wrap { display: flex; align-items: center; }
+    nav { display: flex; align-items: center; gap: 28px; }
+    nav a {
+      padding: 7px 0 5px;
+      border-bottom: 1px solid transparent;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    nav a:hover, nav a[aria-current="page"] { border-color: currentColor; }
+    .menu-button {
+      display: none;
+      min-width: 44px;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: var(--surface);
+      font: 500 14px var(--sans);
+      cursor: pointer;
+    }
+
+    .people-intro {
+      width: var(--page);
+      margin: 0 auto;
+      padding: 88px 0 74px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+      align-items: end;
+    }
+    h1 {
+      grid-column: 1 / span 6;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(56px, 8vw, 96px);
+      font-weight: 400;
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+    .intro-copy {
+      grid-column: 8 / -1;
+      margin: 0 0 5px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .sync-note {
+      width: var(--page);
+      margin: 0 auto;
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .roster-section {
+      background: var(--surface);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .roster-inner { width: var(--page); margin: 0 auto; padding: 76px 0 102px; }
+    .loading, .load-error {
+      padding: 30px 0;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .load-error strong { display: block; margin-bottom: 7px; color: var(--ink); }
+    .load-error a { color: var(--accent); text-underline-offset: 4px; }
+
+    .source-content > h2 {
+      margin: 0 0 34px;
+      font-family: var(--serif);
+      font-size: clamp(34px, 4vw, 52px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+    }
+    .source-content > h2:not(:first-child) { margin-top: 92px; }
+    .source-content > .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 48px;
+      border-top: 1px solid var(--ink);
+    }
+    .source-content .col-sm-6 {
+      min-width: 0;
+      padding: 30px 0 34px;
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr;
+      align-content: start;
+      gap: 5px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .source-content .col-sm-6 > p:first-child {
+      grid-column: 1;
+      grid-row: 1 / span 3;
+      margin: 0;
+    }
+    .source-content .col-sm-6 > p:first-child:empty { display: none; }
+    .source-content img {
+      width: 112px;
+      aspect-ratio: 1;
+      object-fit: cover;
+      filter: grayscale(1);
+      background: var(--accent-light);
+    }
+    .source-content h4 {
+      grid-column: 2;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.25;
+    }
+    .source-content h4 b { font-weight: 500; }
+    .source-content h4 a { text-decoration: none; }
+    .source-content h4 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+    .source-content .col-sm-6 > p:not(:first-child) {
+      grid-column: 2;
+      margin: 4px 0 7px;
+      color: var(--muted);
+    }
+    .source-content .col-sm-6 > p:not(:first-child) i { font-style: normal; }
+    .source-content .col-sm-6 > p:not(:first-child) a { color: var(--accent); text-underline-offset: 3px; }
+    .source-content ul {
+      grid-column: 2;
+      margin: 3px 0 0;
+      padding: 0;
+      color: var(--muted);
+      list-style: none;
+      font-size: 14px;
+    }
+    .source-content li { margin-top: 5px; }
+    .source-content li:empty { display: none; }
+    .source-content li a { color: var(--accent); text-underline-offset: 3px; }
+
+    footer { background: var(--surface); }
+    .footer-bottom {
+      width: var(--page);
+      margin: 0 auto;
+      padding: 26px 0 30px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+
+    @media (max-width: 900px) {
+      :root { --page: min(100% - 40px, 1240px); }
+      .masthead-inner { grid-template-columns: 1fr auto; }
+      .menu-button { display: block; }
+      .nav-wrap {
+        position: absolute;
+        top: 76px;
+        right: 0;
+        left: 0;
+        padding: 22px 20px 26px;
+        display: none;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-wrap.open { display: block; }
+      nav { display: grid; gap: 0; }
+      nav a { min-height: 44px; display: flex; align-items: center; border-bottom-color: var(--line-light); }
+      .source-content > .row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      :root { --page: min(100% - 28px, 1240px); }
+      .wordmark span:last-child { display: none; }
+      .people-intro { padding: 54px 0 46px; display: block; }
+      h1 { font-size: 64px; }
+      .intro-copy { margin-top: 25px; }
+      .roster-inner { padding: 54px 0 72px; }
+      .source-content > h2 { margin-bottom: 25px; font-size: 36px; }
+      .source-content > h2:not(:first-child) { margin-top: 68px; }
+      .source-content .col-sm-6 { grid-template-columns: 82px minmax(0, 1fr); gap: 4px 16px; }
+      .source-content img { width: 82px; }
+      .source-content h4 { font-size: 20px; }
+    }
+
+    @media (max-width: 430px) {
+      .source-content .col-sm-6 { grid-template-columns: 68px minmax(0, 1fr); }
+      .source-content img { width: 68px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="wordmark" href="index.html" aria-label="WANG-AXIS Lab resource index home">
+        <span>AXIS</span><span>WANG Lab resource index</span>
+      </a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <div id="site-nav" class="nav-wrap">
+        <nav aria-label="Primary navigation">
+          <a href="index.html#resources">Resources</a>
+          <a href="index.html#research">Research</a>
+          <a href="people.html" aria-current="page">People</a>
+          <a href="index.html#about">About</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="people-intro" aria-labelledby="people-title">
+      <h1 id="people-title">People</h1>
+      <p class="intro-copy">The current WANG-AXIS lab roster, loaded directly from the original members page.</p>
+    </section>
+    <div id="sync-note" class="sync-note" role="status" aria-live="polite">Loading the current roster from the original lab website…</div>
+
+    <section class="roster-section" aria-label="Lab member roster">
+      <div class="roster-inner">
+        <div id="people-source" class="source-content" aria-busy="true">
+          <div class="loading">Loading people…</div>
+        </div>
+        <noscript>
+          <div class="load-error"><strong>JavaScript is required to load the synchronized roster.</strong><a href="https://wang-axis.github.io/members/">View the original members page</a>.</div>
+        </noscript>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="footer-bottom">© <span id="year">2026</span> WANG-AXIS Lab</div></footer>
+
+  <script>
+    const SOURCE_URL = 'https://wang-axis.github.io/members/';
+    const roster = document.getElementById('people-source');
+    const syncNote = document.getElementById('sync-note');
+    const menuButton = document.querySelector('.menu-button');
+    const navigation = document.querySelector('.nav-wrap');
+
+    menuButton.addEventListener('click', () => {
+      const isOpen = navigation.classList.toggle('open');
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+      menuButton.textContent = isOpen ? 'Close' : 'Menu';
+    });
+
+    navigation.addEventListener('click', event => {
+      if (event.target.closest('a')) {
+        navigation.classList.remove('open');
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.textContent = 'Menu';
+      }
+    });
+
+    function absoluteUrl(value) {
+      try { return new URL(value, SOURCE_URL).href; }
+      catch { return ''; }
+    }
+
+    function sanitizeSource(source) {
+      source.querySelectorAll('script, style, link, iframe, form, button, input, object, embed').forEach(node => node.remove());
+      source.querySelectorAll('p').forEach(node => {
+        if (!node.textContent.trim() && !node.querySelector('img')) node.remove();
+      });
+
+      source.querySelectorAll('*').forEach(element => {
+        [...element.attributes].forEach(attribute => {
+          const name = attribute.name.toLowerCase();
+          if (name.startsWith('on') || ['style', 'width', 'height', 'srcset'].includes(name)) {
+            element.removeAttribute(attribute.name);
+          }
+        });
+
+        if (element.hasAttribute('src')) {
+          const url = absoluteUrl(element.getAttribute('src'));
+          if (url.startsWith('https://')) element.setAttribute('src', url);
+          else element.removeAttribute('src');
+        }
+
+        if (element.hasAttribute('href')) {
+          const raw = element.getAttribute('href').trim();
+          if (raw.startsWith('mailto:') || raw.startsWith('tel:')) return;
+          const url = absoluteUrl(raw);
+          if (url.startsWith('https://') || url.startsWith('http://')) {
+            element.setAttribute('href', url);
+            element.setAttribute('target', '_blank');
+            element.setAttribute('rel', 'noopener noreferrer');
+          } else {
+            element.removeAttribute('href');
+          }
+        }
+      });
+
+      source.querySelectorAll('img').forEach(image => image.setAttribute('loading', 'lazy'));
+      return source;
+    }
+
+    async function loadPeople() {
+      try {
+        const response = await fetch(SOURCE_URL, { cache: 'no-store', credentials: 'omit', mode: 'cors' });
+        if (!response.ok) throw new Error(`Source returned ${response.status}`);
+
+        const html = await response.text();
+        const documentFromSource = new DOMParser().parseFromString(html, 'text/html');
+        const source = documentFromSource.querySelector('#gridid');
+        if (!source) throw new Error('Member section was not found');
+
+        sanitizeSource(source);
+        roster.replaceChildren(...source.childNodes);
+        roster.setAttribute('aria-busy', 'false');
+        syncNote.textContent = 'Roster synchronized from the original WANG-AXIS members page.';
+      } catch (error) {
+        console.error('Could not load the WANG-AXIS roster:', error);
+        roster.setAttribute('aria-busy', 'false');
+        roster.innerHTML = '<div class="load-error"><strong>The current roster could not be loaded.</strong><a href="https://wang-axis.github.io/members/">View the original members page</a>.</div>';
+        syncNote.textContent = 'The live roster is temporarily unavailable.';
+      }
+    }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    loadPeople();
+  </script>
+</body>
+</html>
